@@ -6,6 +6,6 @@ Jason here. I like BASH and Python and meat (that's what I'm made of!). I have h
 
 This is a collection of scripts used for virtualization related tasks. None of the code in this repository is a complete solution. That does not make it useless. It provides a framework for creating working code faster. Spend less time on code not directly related to the objective.
 
-Ciao,<br>
-Jason Antonacci<br>
-https://about.me/jason.antonacci
+Ciao,\
+Jason Antonacci\
+https://linktr.ee/jantonacci7
