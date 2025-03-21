@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 # pylint: disable=indexing-exception
 """ Use TCP sockets to test SMTP with packet capture """
 import logging
@@ -30,14 +30,14 @@ def smtp_cnxn(hostname):
 
 def smtp_queue(tcp_socket):
     """ Queue a series of SMTP commands (verbs) and exit on error """
-    verb_list = ['EHLO {name}'.format(name=socket.getfqdn()),
+    verb_list = [f'EHLO {socket.getfqdn()}',
                  'RSET',
-                 'HELO {name}'.format(name=socket.getfqdn()),
+                 f'HELO {socket.getfqdn()}',
                  'NOOP',
-                 'MAIL FROM:<c3-admin@{name}>'.format(name=socket.getfqdn()),
+                 f'MAIL FROM:<c3-admin@{socket.getfqdn()}>',
                  'RCPT TO:<c3-monitor@vmware.com>',
                  'DATA',
-                 'Subject: {file} - C3 vRLI SMTP test\r\n{file} - C3 vRLI SMTP test\r\n.'.format(file=__file__),
+                 f'Subject: {__file__} - C3 vRLI SMTP test\r\n{__file__} - C3 vRLI SMTP test\r\n.',
                  'QUIT']
     for verb in verb_list:
         socket_error = smtp_exec(tcp_socket, verb)
@@ -47,10 +47,10 @@ def smtp_queue(tcp_socket):
 def smtp_exec(tcp_socket, smtp_cmd):
     """ Execute individual SMTP commands and return error codes """
     time.sleep(1)
-    RUNTIME_LOG.debug('> {message}'.format(message=smtp_cmd))
+    RUNTIME_LOG.debug(f'> {smtp_cmd}')
     try:
-        tcp_socket.sendall('{message}\r\n'.format(message=smtp_cmd))
-    except IOError, errno:
+        tcp_socket.sendall(f'{smtp_cmd}\r\n')
+    except IOError as errno:
         if errno == 32:
             RUNTIME_LOG.error('TCP socket closed by remote peer')
         else:
@@ -66,11 +66,12 @@ def log_reply(tcp_socket):
     time.sleep(1)
     # This should return the SMTP server response 220
     #  Ex. "220 smtp.example.com ESMTP Postfix (smtp)"
+    tcp_recv = None
     try:
         tcp_recv = tcp_socket.recv(4096)
         RUNTIME_LOG.debug('< {message}'.format(message=tcp_recv.strip()))
-    except RuntimeError, errorcode:
-        RUNTIME_LOG.error('TCP socket receive error {code}'.format(code=errorcode))
+    except RuntimeError as errorcode:
+        RUNTIME_LOG.error(f'TCP socket receive error {errorcode}')
 
     if not re.compile(r'^2').match(tcp_recv):
         RUNTIME_LOG.error('SMTP server responded with error code')
@@ -117,7 +118,7 @@ if __name__ == '__main__':
     if sys.argv[1:]:
         SMTPHOST = sys.argv[1]   # This can be IP or DNS
     else:
-        print '\nUsage: {file} <IP|DNS>\n'.format(file=__file__)
+        print(f'\nUsage: {__file__} <IP|DNS>\n')
         sys.exit(1)
 
     SMTPPORT = 25   # SMTP TCP port - SSL/TLS not supported

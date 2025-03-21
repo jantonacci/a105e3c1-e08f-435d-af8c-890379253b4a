@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+
 # pylint: disable=line-too-long
 """ Swingline:  investigating ESXi entire cluster's block storage events using
 Microsoft Excel spreadsheets with preconfigured autofilters and heatmaps """
@@ -132,8 +133,8 @@ def set_opt_default():
     """ SET OPT DEFAULT function """
     ## Setup command line options defaults
     opt_dict = {'tstamp': time.strftime("-%Y%m%d-%H%M%S"),
-                'srdata': os.path.abspath('.'),
-                'rpt_dir': os.path.abspath('.'),
+                'srdata': os.path.abspath(''),
+                'rpt_dir': os.path.abspath(''),
                 'tmp_dir': os.path.abspath(os.getenv('HOME')),
                 'csv_bool': False,
                 'json_bool': False,
