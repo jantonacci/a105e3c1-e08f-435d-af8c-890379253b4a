@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
+
 # pylint: disable=indexing-exception
 """ Use TCP sockets to test SMTP with packet capture """
 import logging
@@ -95,7 +96,7 @@ if __name__ == '__main__':
     if argv[1:]:
         RUNTIME_SEC = int(argv[1])   # This can be IP or DNS
     else:
-        print '\nUsage: {file} <seconds>\n'.format(file=__file__)
+        print(f'\nUsage: {__file__} <seconds>\n')
         exit(1)
 
     SMTPPORT = 50025   # SMTP TCP port - SSL/TLS not supported

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/ev bash
 #
 # Function to parse mutliple command line options and arguements
 
@@ -8,12 +8,12 @@
 # Traditional versions of getopt cannot handle empty argument strings, or arguments with whitespace without quotes.
 # The POSIX shell getopts (notice the 's') is safer, but does not support long arguements (ex. --option=value).
 
-# NOTE2: This script does work in BusyBox or ESXi
+# NOTE2: This script does  not work in BusyBox or ESXi
 
 readonly USAGE="Print script usage. Exit."
 
 #######################################
-# Parse command line options and agruements then configure corresponding script options
+# Parse arguements from command line and configure corresponding script options
 # Globals:
 #   USAGE
 # Arguments:
@@ -22,25 +22,33 @@ readonly USAGE="Print script usage. Exit."
 #   None
 #######################################
 process_optargs() {
-  while getopts “ho:” OPTION
-  do
-    case $OPTION in
-      h)
+  ## NOTE: This requires GNU getopt; BASH built-in getopts is not equivalent
+  local strGetOpt=$(getopt --options ho: --longoptions help,output: -- "${@}")
+
+  $(set -- ${strGetOpt})
+
+  while [[ $# -gt 0 ]]; do
+    case "${1}" in
+      # This option has no arguements. Print script usage.
+      -h | --help )
         echo -e "\n${USAGE}"  # Alternatively, call a script usage function; see usage.sh
         exit 0
         ;;
-      o)
-        echo -e "\nSet variable PATH_TO_OUTPUT_FILE with value \"${OPTARG}\""
-        PATH_TO_OUTPUT_FILE="${OPTARG}"  # Assign option arguement to variable
+      # This option has an arguement. Output to a file.
+      -o | --output)
+        echo -e "\nSet variable PATH_TO_OUTPUT_FILE with value \"${2}\""
+        PATH_TO_OUTPUT_FILE="${2}"  # Assign option arguement to variable
         ;;
-      esac
+      -- )
+        echo -e "\nAll options processed."
+        break
+        ;;
+    esac
+    shift
   done
-  shift $(($OPTIND - 1))
 
-  if [ -z $PATH_TO_OUTPUT_FILE ]; then
-    echo -e "\n${USAGE}"  # Alternatively, call a script usage function; see usage.sh
-    exit 1
-  fi
+  # get rid of the just-finished flag arguments
+  shift $((${OPTIND}-1))
 } # end function process_cli_args
 
 #######################################

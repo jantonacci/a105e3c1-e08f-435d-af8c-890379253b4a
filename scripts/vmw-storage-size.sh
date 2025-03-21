@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # ATTN: Before pasting in vi, run...
 # :set noai nocin nosi inde=

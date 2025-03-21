@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr//bin/env bash
 #
 # Send messages to STDERR using pipe
 
