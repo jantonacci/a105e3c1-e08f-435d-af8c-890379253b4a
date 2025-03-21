@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+
 #pylint: disable=line-too-long
 """ Insert extent names into report results for VMFS versions """
 
@@ -20,19 +21,19 @@ def main():
 
     ## Show results
     for line in result_list:
-        print line
+        print(line)
 
 def file_check(report_result):
     """ Check file dependencies are met or quit """
     try:
         RPT_TXT=sys.argv[1]
     except:
-        print 'USAGE: {f} <RPT_TXT result file>\n\nCurrent directory should be extracted ESXi vm-support bundle.'.format(f=__file__)
+        print(f'USAGE: {__file__} <RPT_TXT result file>\n\nCurrent directory should be extracted ESXi vm-support bundle.')
         quit()
 
     if not os.path.isfile(report_result) and os.path.isfile('./commands/localcli_storage-vmfs-extent-list.txt'):
-        print 'Directory "{d}" \n\tdoes not contain report result "{f}" OR "./commands/localcli_storage-vmfs-extent-list.txt"\n'.format(d=os.path.abspath('.'), f=RPT_TXT)
-        print 'Please make sure:\n\t"." is an extracted ESXi vm-support bundle\n\treport has been run\n\treport result inlcuded as command line option\n'
+        print(f'Directory "{os.path.abspath('..')}" \n\tdoes not contain report result "{RPT_TXT}" OR "./commands/localcli_storage-vmfs-extent-list.txt"\n')
+        print('Please make sure:\n\t"." is an extracted ESXi vm-support bundle\n\treport has been run\n\treport result inlcuded as command line option\n')
         quit()
 
 def parse_file_tdlog(report_result):
@@ -48,7 +49,7 @@ def parse_file_tdlog(report_result):
             ## if the line contains a VMFS version like 'VMFS-5.60'
             if re.compile(r'VMFS-[0-9]\.[0-9][0-9]').search(line):
                 ## Substitute leading white space with nothing
-                re.sub(r'^  *', '', line)
+                re.sub(r'^ +', '', line)
                 ## Append the line to the list and remove any
                 ##  trailing white space or newline (strip)
                 vmfs_list.append(line.strip())
